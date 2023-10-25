@@ -1,4 +1,10 @@
-
+/*
+    * Arvore.h
+    * TAD que implementa uma árvore binária de busca.
+    *
+    * The MIT License (MIT)
+    *
+*/
 #ifndef Arvore_H_INCLUDED
 #define Arvore_H_INCLUDED
 
@@ -62,11 +68,29 @@ int BuscaArvore(Arv *arvore, int valor);
 void ImprimirArvore(No *pai);
 
 /**
- * @brief Verifica se a árvore está vazia.
+ * @brief Conta a quantidade de nós internos da árvore.
  * 
- * @param arvore Ponteiro para a árvore a ser verificada.
- * @return int 1 se a árvore estiver vazia, 0 caso contrário.
+ * @param pai Ponteiro para o nó raiz da árvore.
+ * @param cont Contador de nós internos.
+ * @return int Quantidade de nós internos da árvore.
  */
+int QuantNoInt(No *pai, int cont);
+
+/**
+ * @brief Retorna o menor valor da árvore.
+ * 
+ * @param pai Ponteiro para o nó raiz da árvore.
+ * @param valor Valor a ser comparado.
+ * @return int Menor valor da árvore.
+ */
+int MenorValor(No *pai, int valor);
+
+Arv *criaArvore(){
+    Arv *Arvore = (Arv*)malloc(sizeof(Arv));
+    Arvore->raiz = NULL;
+    return Arvore;
+}
+
 int VerificarVazia(Arv *arvore){
     if (arvore->raiz == NULL){
         return 1;
@@ -74,28 +98,8 @@ int VerificarVazia(Arv *arvore){
     return 0;
 }
 
-int QuantNo(No *pai, int cont);
-
-/**
- * @brief Cria uma nova árvore vazia.
- * 
- * @return Arv* Ponteiro para a nova árvore criada.
- */
-Arv *criaArvore(){
-    Arv *Arvore = (Arv*)malloc(sizeof(Arv));
-    Arvore->raiz = NULL;
-    return Arvore;
-}
-
-/**
- * @brief Insere um novo nó com o valor especificado na árvore.
- * 
- * @param arvore Ponteiro para a árvore onde o valor será inserido.
- * @param valor Valor a ser inserido na árvore.
- * @return Arv* Ponteiro para a árvore atualizada.
- */
 Arv *Inserir(Arv *arvore, int valor){
-    No *macaco = arvore->raiz;
+    No *aux = arvore->raiz;
     No *pai = (No*)malloc(sizeof(No));
     int flag = 0;
 
@@ -105,23 +109,23 @@ Arv *Inserir(Arv *arvore, int valor){
     pai->esq = NULL;
 
     // Se a árvore tiver vazia, o valor será a raiz da árvore
-    if (macaco == NULL){
+    if (aux == NULL){
         arvore->raiz = pai; //Atualize a raiz da árvore aqui
     }else{
         while(!flag){
-            if(valor > macaco->info){
-                if(macaco->dir != NULL){
-                    macaco = macaco->dir;
+            if(valor > aux->info){
+                if(aux->dir != NULL){
+                    aux = aux->dir;
                 }
                 else{
-                    macaco->dir = pai;
+                    aux->dir = pai;
                     flag = 1;
                 }
             }else{
-                if(macaco->esq != NULL){
-                    macaco = macaco->esq;
+                if(aux->esq != NULL){
+                    aux = aux->esq;
                 }else{
-                    macaco->esq = pai;
+                    aux->esq = pai;
                     flag = 1;
                 }
             }
@@ -130,11 +134,6 @@ Arv *Inserir(Arv *arvore, int valor){
     return arvore;
 }
 
-/**
- * @brief Imprime a árvore em pré-ordem.
- * 
- * @param pai Ponteiro para o nó raiz da árvore a ser impressa.
- */
 void ImprimirArvore(No *pai){
     printf("%d,", pai->info);
     if(pai->dir != NULL){
@@ -145,13 +144,6 @@ void ImprimirArvore(No *pai){
     }
 }
 
-/**
- * @brief Busca um valor na árvore.
- * 
- * @param arvore Ponteiro para a árvore onde o valor será buscado.
- * @param valor Valor a ser buscado na árvore.
- * @return int 1 se o valor for encontrado na árvore, 0 caso contrário.
- */
 int BuscaArvore(Arv *arvore, int valor){
     No *macaco = arvore->raiz;
     int flag = 0;
@@ -184,18 +176,34 @@ int BuscaArvore(Arv *arvore, int valor){
     }
 }
 
-int QuantNo(No *pai, int cont){
+int QuantNoInt(No *pai, int cont){
     if(pai == NULL){
-        return cont;
-    }
-    else{
+        return 0;
+    }else{
         if(pai->dir != NULL){
-        cont = QuantNo(pai->dir, cont);
+            cont++;
+            cont = QuantNoInt(pai->dir, cont);
         }
-        else if(pai->esq != NULL){
-            cont = QuantNo(pai->esq, cont);
+        if(pai->esq != NULL){
+            cont++;
+            cont = QuantNoInt(pai->esq, cont);
+        }
+        if(pai->dir == NULL && pai->esq == NULL){
+            cont--;
+        }
+    }
+        return cont;
+}
+
+int MenorValor(No *pai, int valor){
+    if(pai == NULL){
+        return 0;
+    }else{
+        if(pai->esq != NULL){
+            valor = MenorValor(pai->esq, valor);
         }else{
-            return cont++;
+            valor = pai->info;
+            return valor;
         }
     }
 }

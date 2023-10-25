@@ -9,8 +9,9 @@ int main(){
         printf("1 - Inserir\n");
         printf("2 - Buscar\n");
         printf("3 - Imprimir\n");
-        printf("4 - Quantidade de nos\n");
-        printf("5 - Sair\n");
+        printf("4 - Quantidade de nos internos\n");
+        printf("5 - Menor valor da arvore\n");
+        printf("6 - Sair\n");
 
         printf("Escolha a opcao que deseja:\n");
         fflush(stdin);
@@ -43,17 +44,22 @@ int main(){
                 system("pause");
                 break;
             case 4:
+                int quant = 1;
+                quant = QuantNoInt(Arvore->raiz, quant);
+                printf("A quantidade de nos internos na arvore e: %d\n", quant);
                 break;
             case 5:
-                int quant = 0;
-                quant = QuantNo(Arvore->raiz, quant);
-                printf("A quantidade de nos na arvore e: %d\n", quant);
+                int menor_valor = 0;
+                menor_valor = MenorValor(Arvore->raiz, menor_valor);
+                printf("O menor valor da arvore e: %d\n", menor_valor);
+                break;
+            case 6:
                 break;
             default:
                 printf("Opção inválida, tente novamente.\n");
                 break;
         }       
-    }while(resposta != 5);
+    }while(resposta != 6);
 
     return 0;
 }
