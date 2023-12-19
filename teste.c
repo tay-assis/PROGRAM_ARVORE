@@ -1,7 +1,7 @@
 #include "Arvore.h"
 
 int main(){
-    Arv *Arvore = criaArvore();
+    Arv *arvore = CriaArvore();
     int resposta = 0, valor = 0;
 
     do{
@@ -22,13 +22,13 @@ int main(){
             case 1:
                 printf("Digite o valor a ser inserido: ");
                 scanf("%d", &valor);
-                Arvore = Inserir(Arvore, valor);
+                arvore = Inserir(arvore, valor);
                 break;
             case 2:
                 printf("Digite o valor a ser inserido: ");
                 int flag = 0;
                 scanf("%d", &valor);
-                flag = BuscaArvore(Arvore, valor);
+                flag = BuscaArvore(arvore, valor);
                 if(flag){
                     printf("Valor existe na arvore! (:D)\n");
                 }else{
@@ -39,18 +39,18 @@ int main(){
             case 3:
                 printf("\n---------ARVORE--------- \n");
                 printf("--> ");
-                ImprimirArvore(Arvore->raiz);
+                ImprimirArvore(arvore->raiz);
                 printf("\n-------------------------\n");
                 system("pause");
                 break;
             case 4:
                 int quant = 1;
-                quant = QuantNoInt(Arvore->raiz, quant);
+                quant = QuantNoInt(arvore->raiz, quant);
                 printf("A quantidade de nos internos na arvore e: %d\n", quant);
                 break;
             case 5:
                 int menor_valor = 0;
-                menor_valor = MenorValor(Arvore->raiz, menor_valor);
+                menor_valor = MenorValor(arvore->raiz, menor_valor);
                 printf("O menor valor da arvore e: %d\n", menor_valor);
                 break;
             case 6:

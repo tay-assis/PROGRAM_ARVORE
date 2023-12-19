@@ -1,7 +1,7 @@
 /*
     * Arvore.h
-    * TAD que implementa uma árvore binária de busca.
-    *
+    * TAD que implementa uma árvore binária com funções de inserção,
+    * busca, impressão, quantidade de nós internos e menor valor da árvore.
     * The MIT License (MIT)
     *
 */
@@ -27,12 +27,14 @@ struct Arvore
 };
 typedef struct Arvore Arv;
 
+//PROTÓTIPOS
+
 /**
  * @brief Cria uma nova árvore vazia.
  * 
  * @return Arv* Ponteiro para a nova árvore criada.
  */
-Arv *criaArvore();
+Arv *CriaArvore();
 
 /**
  * @brief Insere um novo nó com o valor especificado na árvore.
@@ -85,7 +87,8 @@ int QuantNoInt(No *pai, int cont);
  */
 int MenorValor(No *pai, int valor);
 
-Arv *criaArvore(){
+//IMPLEMENTAÇÃO
+Arv *CriaArvore(){
     Arv *Arvore = (Arv*)malloc(sizeof(Arv));
     Arvore->raiz = NULL;
     return Arvore;
@@ -108,16 +111,26 @@ Arv *Inserir(Arv *arvore, int valor){
     pai->dir = NULL;
     pai->esq = NULL;
 
-    // Se a árvore tiver vazia, o valor será a raiz da árvore
+    // Verifica se a árvore está vazia
     if (aux == NULL){
-        arvore->raiz = pai; //Atualize a raiz da árvore aqui
+        arvore->raiz = pai; 
     }else{
+        // Verifica se o valor já existe na árvore
+        if(BuscaArvore(arvore, valor)){
+            printf("\nValor ja existe na arvore!\n");
+            flag = 1;
+            system("pause");
+        }
+        // Percorre a árvore até encontrar um nó folha
         while(!flag){
+            // Verifica se o valor é maior ou menor que o nó atual
             if(valor > aux->info){
+                // Verifica se o nó atual possui um filho à direita
                 if(aux->dir != NULL){
                     aux = aux->dir;
                 }
                 else{
+                    // Insere o novo nó à direita do nó atual
                     aux->dir = pai;
                     flag = 1;
                 }
@@ -125,48 +138,60 @@ Arv *Inserir(Arv *arvore, int valor){
                 if(aux->esq != NULL){
                     aux = aux->esq;
                 }else{
+                    // Insere o novo nó à esquerda do nó atual
                     aux->esq = pai;
                     flag = 1;
                 }
             }
         }
     }
+    // Retorna a árvore atualizada
     return arvore;
 }
 
 void ImprimirArvore(No *pai){
+    // Imprime o valor do nó atual
     printf("%d,", pai->info);
+    // Verifica se o nó atual possui filhos na direita
     if(pai->dir != NULL){
-        ImprimirArvore(pai->dir);
+        ImprimirArvore(pai->dir); // Chama a função para o filho à direita
     }
+    // Verifica se o nó atual possui filhos na esquerda
     if(pai->esq != NULL){
-        ImprimirArvore(pai->esq);
+        ImprimirArvore(pai->esq); // Chama a função para o filho à esquerda
     }
 }
 
 int BuscaArvore(Arv *arvore, int valor){
-    No *macaco = arvore->raiz;
+    No *aux = arvore->raiz;
     int flag = 0;
 
+    // Verifica se a árvore está vazia
     if(VerificarVazia(arvore)){
         printf("A arvore esta vazia!");
     }else{
+        // Percorre a árvore até encontrar o valor ou um nó folha
         while(!flag){
-            if(macaco->info < valor){
-                if(macaco->dir != NULL){
-                    macaco = macaco->dir;
+            // Verifica se o valor é maior
+            if(aux->info < valor){
+                if(aux->dir != NULL){
+                    aux = aux->dir;
                 }
                 else{
+                    // Se o valor não for encontrado, retorna 0
                     return 0;
                 }
-            }else if(macaco->info > valor){
-                if(macaco->esq != NULL){
-                    macaco = macaco->esq;
+            // Verifica se o valor é menor
+            }else if(aux->info > valor){
+                if(aux->esq != NULL){
+                    aux = aux->esq;
                 }else{
                     return 0;
                 }
+            // Verifica se o valor é igual
             }else{
-                if(macaco->info == valor){
+                if(aux->info == valor){
+                    // Se o valor for encontrado, retorna 1
                     return 1;
                 }else{
                     return 0;
@@ -177,33 +202,39 @@ int BuscaArvore(Arv *arvore, int valor){
 }
 
 int QuantNoInt(No *pai, int cont){
+    // Verifica se a árvore está vazia
     if(pai == NULL){
         return 0;
     }else{
+        // Verifica se o nó atual possui filhos
         if(pai->dir != NULL){
-            cont++;
-            cont = QuantNoInt(pai->dir, cont);
+            cont++; // Incrementa o contador
+            cont = QuantNoInt(pai->dir, cont); // Chama a função para o filho à direita
         }
         if(pai->esq != NULL){
-            cont++;
-            cont = QuantNoInt(pai->esq, cont);
+            cont++; // Incrementa o contador
+            cont = QuantNoInt(pai->esq, cont); // Chama a função para o filho à esquerda
         }
+        // Verifica se o nó atual é uma folha
         if(pai->dir == NULL && pai->esq == NULL){
-            cont--;
+            cont--; // Decrementa o contador
         }
     }
-        return cont;
+    // Retorna o valor do contador
+    return cont;
 }
 
 int MenorValor(No *pai, int valor){
+    // Verifica se a árvore está vazia
     if(pai == NULL){
         return 0;
     }else{
-        if(pai->esq != NULL){
-            valor = MenorValor(pai->esq, valor);
-        }else{
-            valor = pai->info;
-            return valor;
+        // Verifica se o nó atual possui filhos
+        if(pai->esq != NULL){ // Se o nó atual possuir um filho à esquerda
+            valor = MenorValor(pai->esq, valor); // Chama a função para o filho à esquerda
+        }else{ // Se o nó atual não possuir um filho à esquerda
+            valor = pai->info; // O valor do nó atual é o menor valor da árvore
+            return valor; // Retorna o valor
         }
     }
 }
